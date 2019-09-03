@@ -23,11 +23,14 @@ const Todo = require('./models/todo')
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-    res.render('index')
+    Todo.find((err, todos) => {
+        if (err) return console.log(err)
+        return res.render('index', { todos: todos })
+    })
 })
 
 app.get('/todos', (req, res) => {
-    res.send('列出所有 Todo')
+    return res.redirect('/')
 })
 
 app.get('/todos/new', (req, res) => {
@@ -52,6 +55,16 @@ app.post('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/delete', (req, res) => {
     res.send('刪除 Todo')
+})
+
+app.use(function(req, res) {
+    res.status(400)
+    res.render('404')
+})
+
+app.use(function(error, req, res, next) {
+    res.status(500)
+    res.render('500')
 })
 
 app.listen(port, () => {
