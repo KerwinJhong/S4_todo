@@ -1,7 +1,11 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const exphbs = require('express-handlebars')
 const port = 3000
+
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
+app.set('view engine', 'handlebars')
 
 mongoose.connect('mongodb://localhost/todo', { useNewUrlParser: true })
 
@@ -16,35 +20,36 @@ db.once('open', () => {
 })
 
 const Todo = require('./models/todo')
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-        res.send('hello world!')
-    })
-    // 列出全部 Todo
+    res.render('index')
+})
+
 app.get('/todos', (req, res) => {
-        res.send('列出所有 Todo')
-    })
-    // 新增一筆 Todo 頁面
+    res.send('列出所有 Todo')
+})
+
 app.get('/todos/new', (req, res) => {
-        res.send('新增 Todo 頁面')
-    })
-    // 顯示一筆 Todo 的詳細內容
+    res.send('新增 Todo 頁面')
+})
+
 app.get('/todos/:id', (req, res) => {
-        res.send('顯示 Todo 的詳細內容')
-    })
-    // 新增一筆  Todo
+    res.send('顯示 Todo 的詳細內容')
+})
+
 app.post('/todos', (req, res) => {
-        res.send('建立 Todo')
-    })
-    // 修改 Todo 頁面
+    res.send('建立 Todo')
+})
+
 app.get('/todos/:id/edit', (req, res) => {
-        res.send('修改 Todo 頁面')
-    })
-    // 修改 Todo
+    res.send('修改 Todo 頁面')
+})
+
 app.post('/todos/:id/edit', (req, res) => {
-        res.send('修改 Todo')
-    })
-    // 刪除 Todo
+    res.send('修改 Todo')
+})
+
 app.post('/todos/:id/delete', (req, res) => {
     res.send('刪除 Todo')
 })
