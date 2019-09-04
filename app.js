@@ -50,35 +50,38 @@ app.post('/todos', (req, res) => {
 })
 
 app.get('/todos/:id', (req, res) => {
-    Todo.findById(req.body.id, (err, todo) => {
+    Todo.findById(req.params.id, (err, todo) => {
+        if (err) return console.error(err)
         return res.render('detail', { todo: todo })
     })
 })
 
-app.post('/todos', (req, res) => {
-    res.send('建立 Todo')
-})
-
 app.get('/todos/:id/edit', (req, res) => {
-    Todo.findById(req.body.id, (err, todo) => {
-        if (err) return console.log(err)
+    Todo.findById(req.params.id, (err, todo) => {
+        if (err) return console.error(err)
         return res.render('edit', { todo: todo })
     })
 })
 
 app.post('/todos/:id/edit', (req, res) => {
     Todo.findById(req.params.id, (err, todo) => {
-        if (err) return console.log(err)
+        if (err) return console.error(err)
         todo.name = req.body.name
         todo.save(err => {
-            if (err) return console.log(err)
+            if (err) return console.error(err)
             return res.redirect(`/todos/${req.params.id}`)
         })
     })
 })
 
 app.post('/todos/:id/delete', (req, res) => {
-    res.send('刪除 Todo')
+    Todo.findById(req.params.id, (err, todo) => {
+        if (err) return console.error(err)
+        todo.remove(err => {
+            if (err) return console.error(err)
+            return res.redirect('/')
+        })
+    })
 })
 
 app.listen(port, () => {
